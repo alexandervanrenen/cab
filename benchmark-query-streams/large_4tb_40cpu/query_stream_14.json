@@ -1,0 +1,81 @@
+{
+  "database_id": 14,
+  "scale_factor": 155,
+  "database_byte_count": 155000000000,
+  "size_bucket": 11,
+  "pattern_id": 3,
+  "cpu_time": 65695551,
+  "cpu_time_h":"0.0182488h",
+  "query_count": 17,
+  "queries": [
+    {
+      "query_id": 15,
+      "start": 903643,
+      "arguments": ["1993-03-01"]
+    },{
+      "query_id": 21,
+      "start": 948098,
+      "arguments": ["PERU"]
+    },{
+      "query_id": 8,
+      "start": 995807,
+      "arguments": ["INDIA","ASIA","MEDIUM BURNISHED BRASS"]
+    },{
+      "query_id": 20,
+      "start": 1043547,
+      "arguments": ["lavender","1996-01-01","RUSSIA"]
+    },{
+      "query_id": 9,
+      "start": 1065897,
+      "arguments": ["metallic"]
+    },{
+      "query_id": 23,
+      "start": 1099411,
+      "arguments": [929070016,930000032,0,7]
+    },{
+      "query_id": 7,
+      "start": 1128176,
+      "arguments": ["UNITED KINGDOM","GERMANY"]
+    },{
+      "query_id": 4,
+      "start": 1186955,
+      "arguments": ["1995-08-01"]
+    },{
+      "query_id": 23,
+      "start": 2714399,
+      "arguments": [928140000,929070016,0,7]
+    },{
+      "query_id": 12,
+      "start": 2748150,
+      "arguments": ["REG AIR","FOB","1994-01-01"]
+    },{
+      "query_id": 3,
+      "start": 2774613,
+      "arguments": ["MACHINERY","1995-03-15"]
+    },{
+      "query_id": 20,
+      "start": 2816840,
+      "arguments": ["chiffon","1993-01-01","RUSSIA"]
+    },{
+      "query_id": 7,
+      "start": 2847348,
+      "arguments": ["KENYA","VIETNAM"]
+    },{
+      "query_id": 22,
+      "start": 2884543,
+      "arguments": [17,24,15,29,27,31,18]
+    },{
+      "query_id": 22,
+      "start": 2922591,
+      "arguments": [31,25,11,14,10,33,28]
+    },{
+      "query_id": 7,
+      "start": 2966544,
+      "arguments": ["ETHIOPIA","RUSSIA"]
+    },{
+      "query_id": 23,
+      "start": 3169691,
+      "arguments": [927210016,928140000,0,7]
+    }
+  ]
+}

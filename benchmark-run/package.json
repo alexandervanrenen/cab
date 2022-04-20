@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "dependencies": {
+    "async-mutex": "^0.3.2",
+    "aws-sdk": "^2.1097.0",
+    "chalk": "^5.0.1",
+    "n-readlines": "^1.0.1",
+    "parquets": "^0.10.10",
+    "relaxed-json": "^1.0.3",
+    "semaphore-async-await": "^1.5.1",
+    "snowflake-sdk": "^1.6.7",
+    "table": "^6.8.0"
+  },
+  "engines": {
+    "node": ">=15.0.0"
+  }
+}

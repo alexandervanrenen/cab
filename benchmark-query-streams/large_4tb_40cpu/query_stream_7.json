@@ -1,0 +1,109 @@
+{
+  "database_id": 7,
+  "scale_factor": 17,
+  "database_byte_count": 17000000000,
+  "size_bucket": 10,
+  "pattern_id": 3,
+  "cpu_time": 5598532,
+  "cpu_time_h":"0.00155515h",
+  "query_count": 24,
+  "queries": [
+    {
+      "query_id": 1,
+      "start": 480738,
+      "arguments": [116]
+    },{
+      "query_id": 1,
+      "start": 536094,
+      "arguments": [61]
+    },{
+      "query_id": 18,
+      "start": 559333,
+      "arguments": [313]
+    },{
+      "query_id": 12,
+      "start": 576568,
+      "arguments": ["RAIL","REG AIR","1996-01-01"]
+    },{
+      "query_id": 19,
+      "start": 635569,
+      "arguments": ["Brand#15","Brand#55","Brand#24",7,10,21]
+    },{
+      "query_id": 14,
+      "start": 648199,
+      "arguments": ["1996-09-01"]
+    },{
+      "query_id": 11,
+      "start": 708403,
+      "arguments": ["JORDAN",17]
+    },{
+      "query_id": 7,
+      "start": 1141960,
+      "arguments": ["INDIA","GERMANY"]
+    },{
+      "query_id": 19,
+      "start": 1165176,
+      "arguments": ["Brand#12","Brand#51","Brand#41",4,11,26]
+    },{
+      "query_id": 23,
+      "start": 1189284,
+      "arguments": [101898016,102000032,0,7]
+    },{
+      "query_id": 11,
+      "start": 1559664,
+      "arguments": ["VIETNAM",17]
+    },{
+      "query_id": 12,
+      "start": 1602747,
+      "arguments": ["MAIL","RAIL","1994-01-01"]
+    },{
+      "query_id": 14,
+      "start": 1631324,
+      "arguments": ["1996-08-01"]
+    },{
+      "query_id": 22,
+      "start": 1678340,
+      "arguments": [27,11,22,16,21,13,15]
+    },{
+      "query_id": 15,
+      "start": 1695649,
+      "arguments": ["1996-09-01"]
+    },{
+      "query_id": 11,
+      "start": 3005626,
+      "arguments": ["GERMANY",17]
+    },{
+      "query_id": 10,
+      "start": 3026328,
+      "arguments": ["1993-02-01"]
+    },{
+      "query_id": 20,
+      "start": 3082615,
+      "arguments": ["metallic","1996-01-01","CANADA"]
+    },{
+      "query_id": 23,
+      "start": 3113201,
+      "arguments": [101796000,101898016,0,7]
+    },{
+      "query_id": 12,
+      "start": 3145829,
+      "arguments": ["TRUCK","FOB","1995-01-01"]
+    },{
+      "query_id": 5,
+      "start": 3187984,
+      "arguments": ["MIDDLE EAST","1994-01-01"]
+    },{
+      "query_id": 22,
+      "start": 3223732,
+      "arguments": [13,27,18,34,10,30,22]
+    },{
+      "query_id": 8,
+      "start": 3264826,
+      "arguments": ["JORDAN","MIDDLE EAST","LARGE ANODIZED NICKEL"]
+    },{
+      "query_id": 11,
+      "start": 3300183,
+      "arguments": ["VIETNAM",17]
+    }
+  ]
+}

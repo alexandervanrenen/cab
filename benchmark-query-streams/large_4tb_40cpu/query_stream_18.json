@@ -1,0 +1,45 @@
+{
+  "database_id": 18,
+  "scale_factor": 793,
+  "database_byte_count": 793000000000,
+  "size_bucket": 12,
+  "pattern_id": 3,
+  "cpu_time": 233888543,
+  "cpu_time_h":"0.064969h",
+  "query_count": 8,
+  "queries": [
+    {
+      "query_id": 18,
+      "start": 757599,
+      "arguments": [313]
+    },{
+      "query_id": 23,
+      "start": 2306875,
+      "arguments": [4753242016,4758000032,0,7]
+    },{
+      "query_id": 9,
+      "start": 2361844,
+      "arguments": ["khaki"]
+    },{
+      "query_id": 15,
+      "start": 2397544,
+      "arguments": ["1996-11-01"]
+    },{
+      "query_id": 13,
+      "start": 2414662,
+      "arguments": ["express","requests"]
+    },{
+      "query_id": 6,
+      "start": 2450449,
+      "arguments": ["1993-01-01",6,24]
+    },{
+      "query_id": 23,
+      "start": 2492589,
+      "arguments": [4748484000,4753242016,0,7]
+    },{
+      "query_id": 9,
+      "start": 2530874,
+      "arguments": ["pale"]
+    }
+  ]
+}

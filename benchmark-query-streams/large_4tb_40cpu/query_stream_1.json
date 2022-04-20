@@ -1,0 +1,93 @@
+{
+  "database_id": 1,
+  "scale_factor": 1,
+  "database_byte_count": 1000000000,
+  "size_bucket": 9,
+  "pattern_id": 4,
+  "cpu_time": 1428405,
+  "cpu_time_h":"0.000396779h",
+  "query_count": 20,
+  "queries": [
+    {
+      "query_id": 20,
+      "start": 2186364,
+      "arguments": ["moccasin","1993-01-01","ROMANIA"]
+    },{
+      "query_id": 13,
+      "start": 2199746,
+      "arguments": ["unusual","requests"]
+    },{
+      "query_id": 1,
+      "start": 2238395,
+      "arguments": [110]
+    },{
+      "query_id": 22,
+      "start": 2275104,
+      "arguments": [15,11,18,33,25,27,21]
+    },{
+      "query_id": 2,
+      "start": 2316862,
+      "arguments": [32,"TIN","EUROPE"]
+    },{
+      "query_id": 6,
+      "start": 2373424,
+      "arguments": ["1996-01-01",4,24]
+    },{
+      "query_id": 6,
+      "start": 2389900,
+      "arguments": ["1995-01-01",4,24]
+    },{
+      "query_id": 12,
+      "start": 2432373,
+      "arguments": ["RAIL","SHIP","1993-01-01"]
+    },{
+      "query_id": 14,
+      "start": 2480636,
+      "arguments": ["1993-01-01"]
+    },{
+      "query_id": 20,
+      "start": 2487086,
+      "arguments": ["lawn","1993-01-01","CHINA"]
+    },{
+      "query_id": 9,
+      "start": 2520312,
+      "arguments": ["medium"]
+    },{
+      "query_id": 14,
+      "start": 2561961,
+      "arguments": ["1993-03-01"]
+    },{
+      "query_id": 20,
+      "start": 2596791,
+      "arguments": ["puff","1995-01-01","BRAZIL"]
+    },{
+      "query_id": 2,
+      "start": 2640694,
+      "arguments": [47,"COPPER","EUROPE"]
+    },{
+      "query_id": 8,
+      "start": 2693515,
+      "arguments": ["JORDAN","MIDDLE EAST","ECONOMY BRUSHED COPPER"]
+    },{
+      "query_id": 3,
+      "start": 2706569,
+      "arguments": ["AUTOMOBILE","1995-03-17"]
+    },{
+      "query_id": 2,
+      "start": 2741134,
+      "arguments": [1,"COPPER","AMERICA"]
+    },{
+      "query_id": 8,
+      "start": 2795455,
+      "arguments": ["IRAN","MIDDLE EAST","STANDARD PLATED BRASS"]
+    },{
+      "query_id": 5,
+      "start": 2834860,
+      "arguments": ["AMERICA","1994-01-01"]
+    },{
+      "query_id": 11,
+      "start": 2851953,
+      "arguments": ["JAPAN",1]
+    }
+  ]
+}

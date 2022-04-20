@@ -1,0 +1,68 @@
+query_stream_id: 0
+{
+  database_id: 0,
+  scale_factor: 1,
+  database_byte_count: 1000000000,
+  size_bucket: 9,
+  pattern_id: 3,
+  cpu_time: 1510266,
+  cpu_time_h: '0.000419518h',
+  query_count: 16
+}
+[0] Running (delay = 1): select        sum(l_extendedprice) / 7.0 as avg_yearlyfrom    lineitem_0,    part_0where        p_partkey = l_partkey  and p_brand = 'Brand#35'  and p_container = 'LG PACK'  and l_quantity < (    select            0.2 * avg(l_quantity)    from        lineitem_0    where            l_partkey = p_partkey);
+[0] Completed query 17 in 3896ms
+[1] Running (delay = 0): select    l_shipmode,    sum(case            when o_orderpriority = '1-URGENT'                or o_orderpriority = '2-HIGH'                then 1            else 0        end) as high_line_count,    sum(case            when o_orderpriority <> '1-URGENT'                and o_orderpriority <> '2-HIGH'                then 1            else 0        end) as low_line_countfrom    orders_0,    lineitem_0where        o_orderkey = l_orderkey  and l_shipmode in ('FOB', 'SHIP')  and l_commitdate < l_receiptdate  and l_shipdate < l_commitdate  and l_receiptdate >= '1995-01-01'::date  and l_receiptdate < dateadd(year, 1, '1995-01-01'::date)group by    l_shipmodeorder by    l_shipmode;
+[1] Completed query 12 in 1047ms
+[2] Running (delay = 1): select    l_shipmode,    sum(case            when o_orderpriority = '1-URGENT'                or o_orderpriority = '2-HIGH'                then 1            else 0        end) as high_line_count,    sum(case            when o_orderpriority <> '1-URGENT'                and o_orderpriority <> '2-HIGH'                then 1            else 0        end) as low_line_countfrom    orders_0,    lineitem_0where        o_orderkey = l_orderkey  and l_shipmode in ('MAIL', 'TRUCK')  and l_commitdate < l_receiptdate  and l_shipdate < l_commitdate  and l_receiptdate >= '1993-01-01'::date  and l_receiptdate < dateadd(year, 1, '1993-01-01'::date)group by    l_shipmodeorder by    l_shipmode;
+[2] Completed query 12 in 275ms
+[3] Running (delay = 0): select    c_name,    c_custkey,    o_orderkey,    o_orderdate,    o_totalprice,    sum(l_quantity)from    customer_0,    orders_0,    lineitem_0where        o_orderkey in (        select            l_orderkey        from            lineitem_0        group by            l_orderkey having                sum(l_quantity) > 314    )  and c_custkey = o_custkey  and o_orderkey = l_orderkeygroup by    c_name,    c_custkey,    o_orderkey,    o_orderdate,    o_totalpriceorder by    o_totalprice desc,    o_orderdatelimit 100;
+[3] Completed query 18 in 1532ms
+[4] Running (delay = 1): select    o_orderpriority,    count(*) as order_countfrom    orders_0where        o_orderdate >= '1997-08-01'::date  and o_orderdate < add_months('1997-08-01'::date, 3)  and exists (        select            *        from            lineitem_0        where                l_orderkey = o_orderkey          and l_commitdate < l_receiptdate    )group by    o_orderpriorityorder by    o_orderpriority;
+[4] Completed query 4 in 614ms
+[5] Running (delay = 1): select    sum(l_extendedprice* (1 - l_discount)) as revenuefrom    lineitem_0,    part_0where    (                p_partkey = l_partkey            and p_brand = 'Brand#53'            and p_container in ('SM CASE', 'SM BOX', 'SM PACK', 'SM PKG')            and l_quantity >= 8 and l_quantity <= 8 + 10            and p_size between 1 and 5            and l_shipmode in ('AIR', 'AIR REG')            and l_shipinstruct = 'DELIVER IN PERSON'        )   or    (                p_partkey = l_partkey            and p_brand = 'Brand#11'            and p_container in ('MED BAG', 'MED BOX', 'MED PKG', 'MED PACK')            and l_quantity >= 13 and l_quantity <= 13 + 10            and p_size between 1 and 10            and l_shipmode in ('AIR', 'AIR REG')            and l_shipinstruct = 'DELIVER IN PERSON'        )   or    (                p_partkey = l_partkey            and p_brand = 'Brand#33'            and p_container in ('LG CASE', 'LG BOX', 'LG PACK', 'LG PKG')            and l_quantity >= 29 and l_quantity <= 29 + 10            and p_size between 1 and 15            and l_shipmode in ('AIR', 'AIR REG')            and l_shipinstruct = 'DELIVER IN PERSON'        );
+[5] Completed query 19 in 1494ms
+[6] Running (delay = 0): select    s_acctbal,    s_name,    n_name,    p_partkey,    p_mfgr,    s_address,    s_phone,    s_commentfrom    part_0,    supplier_0,    partsupp_0,    nation_0,    region_0where        p_partkey = ps_partkey  and s_suppkey = ps_suppkey  and p_size = 19  and p_type like '%' || 'STEEL'  and s_nationkey = n_nationkey  and n_regionkey = r_regionkey  and r_name = 'AFRICA'  and ps_supplycost = (    select        min(ps_supplycost)    from        partsupp_0,        supplier_0,        nation_0,        region_0    where            p_partkey = ps_partkey      and s_suppkey = ps_suppkey      and s_nationkey = n_nationkey      and n_regionkey = r_regionkey      and r_name = 'AFRICA')order by    s_acctbal desc,    n_name,    s_name,    p_partkeylimit 100;
+[6] Completed query 2 in 2886ms
+[7] Running (delay = 1): select    l_shipmode,    sum(case            when o_orderpriority = '1-URGENT'                or o_orderpriority = '2-HIGH'                then 1            else 0        end) as high_line_count,    sum(case            when o_orderpriority <> '1-URGENT'                and o_orderpriority <> '2-HIGH'                then 1            else 0        end) as low_line_countfrom    orders_0,    lineitem_0where        o_orderkey = l_orderkey  and l_shipmode in ('AIR', 'REG AIR')  and l_commitdate < l_receiptdate  and l_shipdate < l_commitdate  and l_receiptdate >= '1994-01-01'::date  and l_receiptdate < dateadd(year, 1, '1994-01-01'::date)group by    l_shipmodeorder by    l_shipmode;
+[7] Completed query 12 in 2867ms
+[8] Running (delay = 1): select    l_orderkey,    sum(l_extendedprice * (1 - l_discount)) as revenue,    o_orderdate,    o_shippriorityfrom    customer_0,    orders_0,    lineitem_0where        c_mktsegment = 'HOUSEHOLD'  and c_custkey = o_custkey  and l_orderkey = o_orderkey  and o_orderdate < '1995-03-14'::date  and l_shipdate > '1995-03-14'::dategroup by    l_orderkey,    o_orderdate,    o_shippriorityorder by    revenue desc,    o_orderdatelimit 10;
+[8] Completed query 3 in 2403ms
+[9] Running (delay = 1): select    c_custkey,    c_name,    sum(l_extendedprice * (1 - l_discount)) as revenue,    c_acctbal,    n_name,    c_address,    c_phone,    c_commentfrom    customer_0,    orders_0,    lineitem_0,    nation_0where        c_custkey = o_custkey  and l_orderkey = o_orderkey  and o_orderdate >= '1994-04-01'::date  and o_orderdate < add_months('1994-04-01'::date, 3)  and l_returnflag = 'R'  and c_nationkey = n_nationkeygroup by    c_custkey,    c_name,    c_acctbal,    c_phone,    n_name,    c_address,    c_commentorder by    revenue desclimit 20;
+[9] Completed query 10 in 1386ms
+[10] Running (delay = 1): select    s_acctbal,    s_name,    n_name,    p_partkey,    p_mfgr,    s_address,    s_phone,    s_commentfrom    part_0,    supplier_0,    partsupp_0,    nation_0,    region_0where        p_partkey = ps_partkey  and s_suppkey = ps_suppkey  and p_size = 30  and p_type like '%' || 'NICKEL'  and s_nationkey = n_nationkey  and n_regionkey = r_regionkey  and r_name = 'EUROPE'  and ps_supplycost = (    select        min(ps_supplycost)    from        partsupp_0,        supplier_0,        nation_0,        region_0    where            p_partkey = ps_partkey      and s_suppkey = ps_suppkey      and s_nationkey = n_nationkey      and n_regionkey = r_regionkey      and r_name = 'EUROPE')order by    s_acctbal desc,    n_name,    s_name,    p_partkeylimit 100;
+[10] Completed query 2 in 849ms
+[11] Running (delay = 0): select    o_orderpriority,    count(*) as order_countfrom    orders_0where        o_orderdate >= '1995-01-01'::date  and o_orderdate < add_months('1995-01-01'::date, 3)  and exists (        select            *        from            lineitem_0        where                l_orderkey = o_orderkey          and l_commitdate < l_receiptdate    )group by    o_orderpriorityorder by    o_orderpriority;
+[11] Completed query 4 in 9660ms
+[12] Running (delay = 0): select    ps_partkey,    sum(ps_supplycost * ps_availqty) as "value"from    partsupp_0,    supplier_0,    nation_0where        ps_suppkey = s_suppkey  and s_nationkey = n_nationkey  and n_name = 'IRAN'group by    ps_partkey having        sum(ps_supplycost * ps_availqty) > (        select                sum(ps_supplycost * ps_availqty) * (0.0001 / 1)        from            partsupp_0,            supplier_0,            nation_0        where                ps_suppkey = s_suppkey          and s_nationkey = n_nationkey          and n_name = 'IRAN'    )order by    "value" desc;
+[12] Completed query 11 in 9806ms
+[13] Running (delay = 0): select    l_returnflag,    l_linestatus,    sum(l_quantity) as sum_qty,    sum(l_extendedprice) as sum_base_price,    sum(l_extendedprice * (1 - l_discount)) as sum_disc_price,    sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge,    avg(l_quantity) as avg_qty,    avg(l_extendedprice) as avg_price,    avg(l_discount) as avg_disc,    count(*) as count_orderfrom    lineitem_0where    l_shipdate <= '1998-12-01'::date - 68::intgroup by    l_returnflag,    l_linestatusorder by    l_returnflag,    l_linestatus;
+[13] Completed query 1 in 13505ms
+[14] Running (delay = 1): select    cntrycode,    count(*) as numcust,    sum(c_acctbal) as totacctbalfrom    (        select            substring(c_phone, 1, 2) as cntrycode,            c_acctbal        from            customer_0        where                substring(c_phone, 1, 2) in                (32, 26, 20, 17, 21, 22, 30)          and c_acctbal > (            select                avg(c_acctbal)            from                customer_0            where                    c_acctbal > 0.00              and substring(c_phone, 1, 2) in                  (32, 26, 20, 17, 21, 22, 30)        )          and not exists (                select                    *                from                    orders_0                where                        o_custkey = c_custkey            )    ) as custsalegroup by    cntrycodeorder by    cntrycode;
+[14] Completed query 22 in 5578ms
+[15] Running (delay = 1): select    l_returnflag,    l_linestatus,    sum(l_quantity) as sum_qty,    sum(l_extendedprice) as sum_base_price,    sum(l_extendedprice * (1 - l_discount)) as sum_disc_price,    sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge,    avg(l_quantity) as avg_qty,    avg(l_extendedprice) as avg_price,    avg(l_discount) as avg_disc,    count(*) as count_orderfrom    lineitem_0where    l_shipdate <= '1998-12-01'::date - 95::intgroup by    l_returnflag,    l_linestatusorder by    l_returnflag,    l_linestatus;
+[15] Completed query 1 in 10885ms
+-- START CSV --
+query_stream_id, query_id, start, relative_start, query_duration, query_duration_with_queue, start_delay
+0,17,1649319939519,1680604,3896,4392,1
+0,12,1649319954247,1695332,1047,1047,0
+0,12,1649319991873,1732958,275,277,1
+0,18,1649320025312,1766397,1532,1533,0
+0,4,1649320060210,1801295,614,615,1
+0,19,1649320099221,1840306,1494,1497,1
+0,2,1649320146233,1887318,2886,2887,0
+0,12,1649320183726,1924811,2867,2870,1
+0,3,1649320237634,1978719,2403,2405,1
+0,10,1649320778929,2520014,1386,1388,1
+0,2,1649320822671,2563756,849,852,1
+0,4,1649320860049,2601134,9660,9661,0
+0,11,1649320876003,2617088,9806,9806,0
+0,1,1649321464874,3205959,13505,13506,0
+0,22,1649321500232,3241317,5578,5579,1
+0,1,1649321554092,3295177,10885,10886,1
+-- STOP CSV --
+total_time: 3306095
+total_lost: 10
+query_duration: 68683
+query_duration_with_queue: 69201
+
+Normal program exit: done :)

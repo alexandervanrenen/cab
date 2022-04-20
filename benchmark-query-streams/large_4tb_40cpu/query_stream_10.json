@@ -1,0 +1,193 @@
+{
+  "database_id": 10,
+  "scale_factor": 44,
+  "database_byte_count": 44000000000,
+  "size_bucket": 11,
+  "pattern_id": 6,
+  "cpu_time": 679585278,
+  "cpu_time_h":"0.188774h",
+  "query_count": 45,
+  "queries": [
+    {
+      "query_id": 9,
+      "start": 16060,
+      "arguments": ["lawn"]
+    },{
+      "query_id": 1,
+      "start": 172503,
+      "arguments": [89]
+    },{
+      "query_id": 20,
+      "start": 292986,
+      "arguments": ["sienna","1996-01-01","UNITED STATES"]
+    },{
+      "query_id": 23,
+      "start": 301352,
+      "arguments": [263736000,264000032,0,7]
+    },{
+      "query_id": 10,
+      "start": 464032,
+      "arguments": ["1993-09-01"]
+    },{
+      "query_id": 4,
+      "start": 576236,
+      "arguments": ["1994-05-01"]
+    },{
+      "query_id": 20,
+      "start": 596772,
+      "arguments": ["cornsilk","1997-01-01","EGYPT"]
+    },{
+      "query_id": 11,
+      "start": 734575,
+      "arguments": ["INDONESIA",44]
+    },{
+      "query_id": 23,
+      "start": 736995,
+      "arguments": [263472000,263736000,0,7]
+    },{
+      "query_id": 3,
+      "start": 926743,
+      "arguments": ["AUTOMOBILE","1995-03-30"]
+    },{
+      "query_id": 16,
+      "start": 932869,
+      "arguments": ["Brand#11","SMALL ANODIZED",31,30,50,2,29,26,21,6]
+    },{
+      "query_id": 21,
+      "start": 1046817,
+      "arguments": ["MOROCCO"]
+    },{
+      "query_id": 11,
+      "start": 1197132,
+      "arguments": ["UNITED KINGDOM",44]
+    },{
+      "query_id": 17,
+      "start": 1199601,
+      "arguments": ["Brand#54","JUMBO BOX"]
+    },{
+      "query_id": 10,
+      "start": 1207033,
+      "arguments": ["1993-12-01"]
+    },{
+      "query_id": 6,
+      "start": 1213044,
+      "arguments": ["1994-01-01",4,25]
+    },{
+      "query_id": 23,
+      "start": 1359968,
+      "arguments": [263208000,263472000,0,7]
+    },{
+      "query_id": 11,
+      "start": 1489169,
+      "arguments": ["IRAQ",44]
+    },{
+      "query_id": 14,
+      "start": 1500536,
+      "arguments": ["1993-05-01"]
+    },{
+      "query_id": 20,
+      "start": 1505161,
+      "arguments": ["ivory","1993-01-01","ARGENTINA"]
+    },{
+      "query_id": 23,
+      "start": 1624837,
+      "arguments": [262944000,263208000,0,7]
+    },{
+      "query_id": 6,
+      "start": 1625364,
+      "arguments": ["1996-01-01",4,24]
+    },{
+      "query_id": 11,
+      "start": 1651660,
+      "arguments": ["IRAN",44]
+    },{
+      "query_id": 6,
+      "start": 1653019,
+      "arguments": ["1995-01-01",9,24]
+    },{
+      "query_id": 22,
+      "start": 1655557,
+      "arguments": [29,34,20,16,18,22,14]
+    },{
+      "query_id": 15,
+      "start": 1821626,
+      "arguments": ["1997-09-01"]
+    },{
+      "query_id": 5,
+      "start": 1824473,
+      "arguments": ["ASIA","1996-01-01"]
+    },{
+      "query_id": 11,
+      "start": 1945377,
+      "arguments": ["IRAN",44]
+    },{
+      "query_id": 8,
+      "start": 1976355,
+      "arguments": ["JORDAN","MIDDLE EAST","ECONOMY POLISHED COPPER"]
+    },{
+      "query_id": 18,
+      "start": 2112791,
+      "arguments": [315]
+    },{
+      "query_id": 17,
+      "start": 2114901,
+      "arguments": ["Brand#13","MED CAN"]
+    },{
+      "query_id": 10,
+      "start": 2249333,
+      "arguments": ["1994-01-01"]
+    },{
+      "query_id": 23,
+      "start": 2376536,
+      "arguments": [262680000,262944000,0,7]
+    },{
+      "query_id": 1,
+      "start": 2520972,
+      "arguments": [77]
+    },{
+      "query_id": 8,
+      "start": 2707088,
+      "arguments": ["GERMANY","EUROPE","PROMO ANODIZED COPPER"]
+    },{
+      "query_id": 15,
+      "start": 2708488,
+      "arguments": ["1995-08-01"]
+    },{
+      "query_id": 9,
+      "start": 2866624,
+      "arguments": ["lavender"]
+    },{
+      "query_id": 19,
+      "start": 2990027,
+      "arguments": ["Brand#13","Brand#41","Brand#11",7,10,25]
+    },{
+      "query_id": 8,
+      "start": 2997819,
+      "arguments": ["GERMANY","EUROPE","PROMO PLATED BRASS"]
+    },{
+      "query_id": 12,
+      "start": 3144978,
+      "arguments": ["REG AIR","SHIP","1997-01-01"]
+    },{
+      "query_id": 6,
+      "start": 3164242,
+      "arguments": ["1997-01-01",5,25]
+    },{
+      "query_id": 5,
+      "start": 3276321,
+      "arguments": ["ASIA","1996-01-01"]
+    },{
+      "query_id": 20,
+      "start": 3306200,
+      "arguments": ["chartreuse","1996-01-01","EGYPT"]
+    },{
+      "query_id": 3,
+      "start": 3444124,
+      "arguments": ["BUILDING","1995-03-17"]
+    },{
+      "query_id": 11,
+      "start": 3451994,
+      "arguments": ["ALGERIA",44]
+    }
+  ]
+}

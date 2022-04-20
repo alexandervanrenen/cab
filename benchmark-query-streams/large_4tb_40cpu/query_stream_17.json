@@ -1,0 +1,185 @@
+{
+  "database_id": 17,
+  "scale_factor": 481,
+  "database_byte_count": 481000000000,
+  "size_bucket": 12,
+  "pattern_id": 4,
+  "cpu_time": 12102409710,
+  "cpu_time_h":"3.36178h",
+  "query_count": 43,
+  "queries": [
+    {
+      "query_id": 12,
+      "start": 830677,
+      "arguments": ["MAIL","RAIL","1995-01-01"]
+    },{
+      "query_id": 13,
+      "start": 832350,
+      "arguments": ["unusual","requests"]
+    },{
+      "query_id": 21,
+      "start": 835274,
+      "arguments": ["INDIA"]
+    },{
+      "query_id": 20,
+      "start": 838677,
+      "arguments": ["burnished","1997-01-01","VIETNAM"]
+    },{
+      "query_id": 4,
+      "start": 839191,
+      "arguments": ["1993-11-01"]
+    },{
+      "query_id": 13,
+      "start": 843015,
+      "arguments": ["unusual","requests"]
+    },{
+      "query_id": 21,
+      "start": 843589,
+      "arguments": ["MOROCCO"]
+    },{
+      "query_id": 18,
+      "start": 846480,
+      "arguments": [315]
+    },{
+      "query_id": 14,
+      "start": 849893,
+      "arguments": ["1995-06-01"]
+    },{
+      "query_id": 4,
+      "start": 851580,
+      "arguments": ["1993-08-01"]
+    },{
+      "query_id": 17,
+      "start": 855324,
+      "arguments": ["Brand#53","JUMBO BAG"]
+    },{
+      "query_id": 12,
+      "start": 859653,
+      "arguments": ["REG AIR","FOB","1996-01-01"]
+    },{
+      "query_id": 20,
+      "start": 972080,
+      "arguments": ["goldenrod","1995-01-01","IRAQ"]
+    },{
+      "query_id": 20,
+      "start": 972603,
+      "arguments": ["black","1995-01-01","INDIA"]
+    },{
+      "query_id": 4,
+      "start": 974260,
+      "arguments": ["1994-08-01"]
+    },{
+      "query_id": 17,
+      "start": 975477,
+      "arguments": ["Brand#31","WRAP BOX"]
+    },{
+      "query_id": 16,
+      "start": 980182,
+      "arguments": ["Brand#45","STANDARD POLISHED",32,23,3,25,21,35,22,33]
+    },{
+      "query_id": 1,
+      "start": 987271,
+      "arguments": [111]
+    },{
+      "query_id": 4,
+      "start": 987546,
+      "arguments": ["1994-11-01"]
+    },{
+      "query_id": 18,
+      "start": 987964,
+      "arguments": [314]
+    },{
+      "query_id": 2,
+      "start": 992697,
+      "arguments": [15,"COPPER","EUROPE"]
+    },{
+      "query_id": 15,
+      "start": 993564,
+      "arguments": ["1997-04-01"]
+    },{
+      "query_id": 3,
+      "start": 995932,
+      "arguments": ["MACHINERY","1995-03-26"]
+    },{
+      "query_id": 5,
+      "start": 998380,
+      "arguments": ["EUROPE","1993-01-01"]
+    },{
+      "query_id": 13,
+      "start": 1000820,
+      "arguments": ["unusual","requests"]
+    },{
+      "query_id": 20,
+      "start": 1404528,
+      "arguments": ["cyan","1994-01-01","IRAQ"]
+    },{
+      "query_id": 3,
+      "start": 1406972,
+      "arguments": ["HOUSEHOLD","1995-03-06"]
+    },{
+      "query_id": 15,
+      "start": 1408666,
+      "arguments": ["1997-09-01"]
+    },{
+      "query_id": 3,
+      "start": 1411908,
+      "arguments": ["MACHINERY","1995-03-15"]
+    },{
+      "query_id": 6,
+      "start": 1420101,
+      "arguments": ["1993-01-01",5,25]
+    },{
+      "query_id": 18,
+      "start": 1421809,
+      "arguments": [314]
+    },{
+      "query_id": 6,
+      "start": 1421943,
+      "arguments": ["1994-01-01",8,24]
+    },{
+      "query_id": 8,
+      "start": 1423824,
+      "arguments": ["RUSSIA","EUROPE","ECONOMY ANODIZED STEEL"]
+    },{
+      "query_id": 9,
+      "start": 1424625,
+      "arguments": ["sandy"]
+    },{
+      "query_id": 16,
+      "start": 1424957,
+      "arguments": ["Brand#34","ECONOMY ANODIZED",25,41,12,34,9,26,37,49]
+    },{
+      "query_id": 17,
+      "start": 1425683,
+      "arguments": ["Brand#54","JUMBO PACK"]
+    },{
+      "query_id": 16,
+      "start": 1427399,
+      "arguments": ["Brand#42","ECONOMY PLATED",32,7,43,3,9,13,27,14]
+    },{
+      "query_id": 7,
+      "start": 1428193,
+      "arguments": ["VIETNAM","FRANCE"]
+    },{
+      "query_id": 22,
+      "start": 1430084,
+      "arguments": [34,23,14,31,30,18,25]
+    },{
+      "query_id": 6,
+      "start": 1432796,
+      "arguments": ["1994-01-01",8,24]
+    },{
+      "query_id": 7,
+      "start": 1434386,
+      "arguments": ["IRAN","CHINA"]
+    },{
+      "query_id": 22,
+      "start": 1436975,
+      "arguments": [34,31,17,15,13,29,28]
+    },{
+      "query_id": 17,
+      "start": 1437909,
+      "arguments": ["Brand#53","WRAP DRUM"]
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+query_stream_id: 14
+{
+  database_id: 14,
+  scale_factor: 43,
+  database_byte_count: 43000000000,
+  size_bucket: 11,
+  pattern_id: 3,
+  cpu_time: 29143653,
+  cpu_time_h: '0.00809546h',
+  query_count: 17
+}
+[0] Running (delay = 0): select    c_count,    count(*) as custdistfrom    (        select            c_custkey,            count(o_orderkey) c_count        from            customer_14 left outer join orders_14 on                        c_custkey = o_custkey                    and o_comment not like '%' || 'express' || '%' || 'deposits' || '%'        group by            c_custkey    ) as c_ordersgroup by    c_countorder by    custdist desc,    c_count desc;
+[1] Running (delay = 0): select    s_name,    count(*) as numwaitfrom    supplier_14,    lineitem_14 l1,    orders_14,    nation_14where        s_suppkey = l1.l_suppkey  and o_orderkey = l1.l_orderkey  and o_orderstatus = 'F'  and l1.l_receiptdate > l1.l_commitdate  and exists (        select            *        from            lineitem_14 l2        where                l2.l_orderkey = l1.l_orderkey          and l2.l_suppkey <> l1.l_suppkey    )  and not exists (        select            *        from            lineitem_14 l3        where                l3.l_orderkey = l1.l_orderkey          and l3.l_suppkey <> l1.l_suppkey          and l3.l_receiptdate > l3.l_commitdate    )  and s_nationkey = n_nationkey  and n_name = 'INDONESIA'group by    s_nameorder by    numwait desc,    s_namelimit 100;
+[2] Running (delay = 0): select    o_orderpriority,    count(*) as order_countfrom    orders_14where        o_orderdate >= '1993-06-01'::date  and o_orderdate < add_months('1993-06-01'::date, 3)  and exists (        select            *        from            lineitem_14        where                l_orderkey = o_orderkey          and l_commitdate < l_receiptdate    )group by    o_orderpriorityorder by    o_orderpriority;
+[3] Running (delay = 1): select    l_orderkey,    sum(l_extendedprice * (1 - l_discount)) as revenue,    o_orderdate,    o_shippriorityfrom    customer_14,    orders_14,    lineitem_14where        c_mktsegment = 'HOUSEHOLD'  and c_custkey = o_custkey  and l_orderkey = o_orderkey  and o_orderdate < '1995-03-27'::date  and l_shipdate > '1995-03-27'::dategroup by    l_orderkey,    o_orderdate,    o_shippriorityorder by    revenue desc,    o_orderdatelimit 10;
+[0] Completed query 13 in 154502ms
+[4] Running (delay = 1): select    s_name,    count(*) as numwaitfrom    supplier_14,    lineitem_14 l1,    orders_14,    nation_14where        s_suppkey = l1.l_suppkey  and o_orderkey = l1.l_orderkey  and o_orderstatus = 'F'  and l1.l_receiptdate > l1.l_commitdate  and exists (        select            *        from            lineitem_14 l2        where                l2.l_orderkey = l1.l_orderkey          and l2.l_suppkey <> l1.l_suppkey    )  and not exists (        select            *        from            lineitem_14 l3        where                l3.l_orderkey = l1.l_orderkey          and l3.l_suppkey <> l1.l_suppkey          and l3.l_receiptdate > l3.l_commitdate    )  and s_nationkey = n_nationkey  and n_name = 'ALGERIA'group by    s_nameorder by    numwait desc,    s_namelimit 100;
+[5] Running (delay = 0): select    sum(l_extendedprice * l_discount) as revenuefrom    lineitem_14where        l_shipdate >= '1996-01-01'::date  and l_shipdate < dateadd(year, 1, '1996-01-01'::date)  and l_discount between (6::number(12,2) / 100) - 0.01 and (6::number(12,2) / 100) + 0.01  and l_quantity < 25;
+[5] Completed query 6 in 6382ms
+[1] Completed query 21 in 161094ms
+[6] Running (delay = 1): select    c_name,    c_custkey,    o_orderkey,    o_orderdate,    o_totalprice,    sum(l_quantity)from    customer_14,    orders_14,    lineitem_14where        o_orderkey in (        select            l_orderkey        from            lineitem_14        group by            l_orderkey having                sum(l_quantity) > 313    )  and c_custkey = o_custkey  and o_orderkey = l_orderkeygroup by    c_name,    c_custkey,    o_orderkey,    o_orderdate,    o_totalpriceorder by    o_totalprice desc,    o_orderdatelimit 100;
+[2] Completed query 4 in 122511ms
+[3] Completed query 3 in 119845ms
+[7] Running (delay = 1): select    nation,    o_year,    sum(amount) as sum_profitfrom    (        select            n_name as nation,            extract(year from o_orderdate) as o_year,            l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount        from            part_14,            supplier_14,            lineitem_14,            partsupp_14,            orders_14,            nation_14        where                s_suppkey = l_suppkey          and ps_suppkey = l_suppkey          and ps_partkey = l_partkey          and p_partkey = l_partkey          and o_orderkey = l_orderkey          and s_nationkey = n_nationkey          and p_name like '%' || 'linen' || '%'    ) as profitgroup by    nation,    o_yearorder by    nation,    o_year desc;
+[4] Completed query 21 in 133864ms
+[6] Completed query 18 in 173816ms
+[7] Completed query 9 in 205158ms
+[8] Running (delay = 1): select    l_shipmode,    sum(case            when o_orderpriority = '1-URGENT'                or o_orderpriority = '2-HIGH'                then 1            else 0        end) as high_line_count,    sum(case            when o_orderpriority <> '1-URGENT'                and o_orderpriority <> '2-HIGH'                then 1            else 0        end) as low_line_countfrom    orders_14,    lineitem_14where        o_orderkey = l_orderkey  and l_shipmode in ('TRUCK', 'RAIL')  and l_commitdate < l_receiptdate  and l_shipdate < l_commitdate  and l_receiptdate >= '1994-01-01'::date  and l_receiptdate < dateadd(year, 1, '1994-01-01'::date)group by    l_shipmodeorder by    l_shipmode;
+[9] Running (delay = 0): select    c_count,    count(*) as custdistfrom    (        select            c_custkey,            count(o_orderkey) c_count        from            customer_14 left outer join orders_14 on                        c_custkey = o_custkey                    and o_comment not like '%' || 'special' || '%' || 'requests' || '%'        group by            c_custkey    ) as c_ordersgroup by    c_countorder by    custdist desc,    c_count desc;
+[10] Running (delay = 1): select    s_name,    count(*) as numwaitfrom    supplier_14,    lineitem_14 l1,    orders_14,    nation_14where        s_suppkey = l1.l_suppkey  and o_orderkey = l1.l_orderkey  and o_orderstatus = 'F'  and l1.l_receiptdate > l1.l_commitdate  and exists (        select            *        from            lineitem_14 l2        where                l2.l_orderkey = l1.l_orderkey          and l2.l_suppkey <> l1.l_suppkey    )  and not exists (        select            *        from            lineitem_14 l3        where                l3.l_orderkey = l1.l_orderkey          and l3.l_suppkey <> l1.l_suppkey          and l3.l_receiptdate > l3.l_commitdate    )  and s_nationkey = n_nationkey  and n_name = 'VIETNAM'group by    s_nameorder by    numwait desc,    s_namelimit 100;
+[8] Completed query 12 in 100148ms
+[11] Running (delay = 1): select    s_name,    count(*) as numwaitfrom    supplier_14,    lineitem_14 l1,    orders_14,    nation_14where        s_suppkey = l1.l_suppkey  and o_orderkey = l1.l_orderkey  and o_orderstatus = 'F'  and l1.l_receiptdate > l1.l_commitdate  and exists (        select            *        from            lineitem_14 l2        where                l2.l_orderkey = l1.l_orderkey          and l2.l_suppkey <> l1.l_suppkey    )  and not exists (        select            *        from            lineitem_14 l3        where                l3.l_orderkey = l1.l_orderkey          and l3.l_suppkey <> l1.l_suppkey          and l3.l_receiptdate > l3.l_commitdate    )  and s_nationkey = n_nationkey  and n_name = 'MOZAMBIQUE'group by    s_nameorder by    numwait desc,    s_namelimit 100;
+[9] Completed query 13 in 108653ms
+[12] Running (delay = 0): select    s_name,    count(*) as numwaitfrom    supplier_14,    lineitem_14 l1,    orders_14,    nation_14where        s_suppkey = l1.l_suppkey  and o_orderkey = l1.l_orderkey  and o_orderstatus = 'F'  and l1.l_receiptdate > l1.l_commitdate  and exists (        select            *        from            lineitem_14 l2        where                l2.l_orderkey = l1.l_orderkey          and l2.l_suppkey <> l1.l_suppkey    )  and not exists (        select            *        from            lineitem_14 l3        where                l3.l_orderkey = l1.l_orderkey          and l3.l_suppkey <> l1.l_suppkey          and l3.l_receiptdate > l3.l_commitdate    )  and s_nationkey = n_nationkey  and n_name = 'ARGENTINA'group by    s_nameorder by    numwait desc,    s_namelimit 100;
+[13] Running (delay = 0): select    c_name,    c_custkey,    o_orderkey,    o_orderdate,    o_totalprice,    sum(l_quantity)from    customer_14,    orders_14,    lineitem_14where        o_orderkey in (        select            l_orderkey        from            lineitem_14        group by            l_orderkey having                sum(l_quantity) > 315    )  and c_custkey = o_custkey  and o_orderkey = l_orderkeygroup by    c_name,    c_custkey,    o_orderkey,    o_orderdate,    o_totalpriceorder by    o_totalprice desc,    o_orderdatelimit 100;
+[14] Running (delay = 1): select    l_shipmode,    sum(case            when o_orderpriority = '1-URGENT'                or o_orderpriority = '2-HIGH'                then 1            else 0        end) as high_line_count,    sum(case            when o_orderpriority <> '1-URGENT'                and o_orderpriority <> '2-HIGH'                then 1            else 0        end) as low_line_countfrom    orders_14,    lineitem_14where        o_orderkey = l_orderkey  and l_shipmode in ('MAIL', 'TRUCK')  and l_commitdate < l_receiptdate  and l_shipdate < l_commitdate  and l_receiptdate >= '1996-01-01'::date  and l_receiptdate < dateadd(year, 1, '1996-01-01'::date)group by    l_shipmodeorder by    l_shipmode;
+[10] Completed query 21 in 169608ms
+[15] Running (delay = 1): select    s_name,    s_addressfrom    supplier_14,    nation_14where        s_suppkey in (        select            ps_suppkey        from            partsupp_14        where                ps_partkey in (                select                    p_partkey                from                    part_14                where                        p_name like 'hot' || '%'            )          and ps_availqty > (            select                    0.5 * sum(l_quantity)            from                lineitem_14            where                    l_partkey = ps_partkey              and l_suppkey = ps_suppkey              and l_shipdate >= '1997-01-01'::date              and l_shipdate < dateadd(year, 1, '1997-01-01'::date)        )    )  and s_nationkey = n_nationkey  and n_name = 'JORDAN'order by    s_name;
+[11] Completed query 21 in 182559ms
+[12] Completed query 21 in 180927ms
+[14] Completed query 12 in 132191ms
+[13] Completed query 18 in 158483ms
+[15] Completed query 20 in 112852ms
+[16] Running (delay = 1): select    l_returnflag,    l_linestatus,    sum(l_quantity) as sum_qty,    sum(l_extendedprice) as sum_base_price,    sum(l_extendedprice * (1 - l_discount)) as sum_disc_price,    sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge,    avg(l_quantity) as avg_qty,    avg(l_extendedprice) as avg_price,    avg(l_discount) as avg_disc,    count(*) as count_orderfrom    lineitem_14where    l_shipdate <= '1998-12-01'::date - 101::intgroup by    l_returnflag,    l_linestatusorder by    l_returnflag,    l_linestatus;
+[16] Completed query 1 in 151291ms
+-- START CSV --
+query_stream_id, query_id, start, relative_start, query_duration, query_duration_with_queue, start_delay
+14,13,1649328547606,903860,154502,155017,0
+14,21,1649328585214,941468,161094,161368,0
+14,4,1649328643657,999911,122511,122752,0
+14,3,1649328654704,1010958,119845,120082,1
+14,21,1649328710874,1067128,133864,133866,1
+14,6,1649328732109,1088363,6382,6624,0
+14,18,1649328763780,1120034,173816,173817,1
+14,9,1649328801121,1157375,205158,205160,1
+14,12,1649330364685,2720939,100148,100150,1
+14,13,1649330385186,2741440,108653,108654,0
+14,21,1649330415781,2772035,169608,169611,1
+14,21,1649330486479,2842733,182559,182560,1
+14,21,1649330497204,2853458,180927,180928,0
+14,18,1649330541843,2898097,158483,158484,0
+14,12,1649330567825,2924079,132191,132193,1
+14,20,1649330602644,2958898,112852,112853,1
+14,1,1649330813971,3170225,151291,151292,1
+-- STOP CSV --
+total_time: 3321597
+total_lost: 10
+query_duration: 2373884
+query_duration_with_queue: 2375411
+
+Normal program exit: done :)

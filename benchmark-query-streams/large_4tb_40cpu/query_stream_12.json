@@ -1,0 +1,73 @@
+{
+  "database_id": 12,
+  "scale_factor": 82,
+  "database_byte_count": 82000000000,
+  "size_bucket": 11,
+  "pattern_id": 3,
+  "cpu_time": 44270576,
+  "cpu_time_h":"0.0122974h",
+  "query_count": 15,
+  "queries": [
+    {
+      "query_id": 8,
+      "start": 2820716,
+      "arguments": ["ETHIOPIA","AFRICA","ECONOMY BURNISHED BRASS"]
+    },{
+      "query_id": 15,
+      "start": 2867916,
+      "arguments": ["1994-10-01"]
+    },{
+      "query_id": 22,
+      "start": 2880550,
+      "arguments": [23,24,19,33,16,13,26]
+    },{
+      "query_id": 11,
+      "start": 2945646,
+      "arguments": ["SAUDI ARABIA",82]
+    },{
+      "query_id": 6,
+      "start": 2960876,
+      "arguments": ["1997-01-01",4,24]
+    },{
+      "query_id": 7,
+      "start": 3008560,
+      "arguments": ["EGYPT","IRAN"]
+    },{
+      "query_id": 15,
+      "start": 3044896,
+      "arguments": ["1996-03-01"]
+    },{
+      "query_id": 21,
+      "start": 3082509,
+      "arguments": ["ARGENTINA"]
+    },{
+      "query_id": 16,
+      "start": 3108152,
+      "arguments": ["Brand#41","PROMO ANODIZED",37,24,26,28,30,41,8,19]
+    },{
+      "query_id": 12,
+      "start": 3170311,
+      "arguments": ["TRUCK","SHIP","1996-01-01"]
+    },{
+      "query_id": 11,
+      "start": 3215176,
+      "arguments": ["CANADA",82]
+    },{
+      "query_id": 18,
+      "start": 3269083,
+      "arguments": [315]
+    },{
+      "query_id": 15,
+      "start": 3278379,
+      "arguments": ["1996-09-01"]
+    },{
+      "query_id": 14,
+      "start": 3323162,
+      "arguments": ["1996-06-01"]
+    },{
+      "query_id": 16,
+      "start": 3375165,
+      "arguments": ["Brand#35","ECONOMY BRUSHED",30,7,23,35,44,19,36,34]
+    }
+  ]
+}

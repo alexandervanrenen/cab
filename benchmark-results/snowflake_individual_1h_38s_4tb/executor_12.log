@@ -1,0 +1,67 @@
+query_stream_id: 12
+{
+  database_id: 12,
+  scale_factor: 82,
+  database_byte_count: 82000000000,
+  size_bucket: 11,
+  pattern_id: 3,
+  cpu_time: 44270576,
+  cpu_time_h: '0.0122974h',
+  query_count: 15
+}
+[0] Running: select     o_year,     sum(case             when nation = 'ETHIOPIA' then volume             else 0         end) / sum(volume) as mkt_share from     (         select             extract(year from o_orderdate) as o_year,             l_extendedprice * (1 - l_discount) as volume,             n2.n_name as nation         from             part_12,             supplier_12,             lineitem_12,             orders_12,             customer_12,             nation_12 n1,             nation_12 n2,             region_12         where                 p_partkey = l_partkey           and s_suppkey = l_suppkey           and l_orderkey = o_orderkey           and o_custkey = c_custkey           and c_nationkey = n1.n_nationkey           and n1.n_regionkey = r_regionkey           and r_name = 'AFRICA'           and s_nationkey = n2.n_nationkey           and o_orderdate between date '1995-01-01' and date '1996-12-31'           and p_type = 'ECONOMY BURNISHED BRASS'     ) as all_nations group by     o_year order by     o_year;
+[0] Completed query stats: 8, 24593, 25116, 2820716
+[1] Running: with revenue as (     select         l_suppkey as supplier_no,         sum(l_extendedprice * (1 - l_discount)) as total_revenue     from         lineitem_12     where             l_shipdate >= '1994-10-01'::date       and l_shipdate < add_months('1994-10-01'::date, 3)     group by         l_suppkey) select     s_suppkey,     s_name,     s_address,     s_phone,     total_revenue from     supplier_12,     revenue where         s_suppkey = supplier_no   and total_revenue = (     select         max(total_revenue)     from         revenue ) order by     s_suppkey;
+[2] Running: select     cntrycode,     count(*) as numcust,     sum(c_acctbal) as totacctbal from     (         select             substring(c_phone, 1, 2) as cntrycode,             c_acctbal         from             customer_12         where                 substring(c_phone, 1, 2) in                 (23, 24, 19, 33, 16, 13, 26)           and c_acctbal > (             select                 avg(c_acctbal)             from                 customer_12             where                     c_acctbal > 0.00               and substring(c_phone, 1, 2) in                   (23, 24, 19, 33, 16, 13, 26)         )           and not exists (                 select                     *                 from                     orders_12                 where                         o_custkey = c_custkey             )     ) as custsale group by     cntrycode order by     cntrycode;
+[1] Completed query stats: 15, 13969, 13970, 2867917
+[2] Completed query stats: 22, 2705, 3064, 2880551
+[3] Running: select     ps_partkey,     sum(ps_supplycost * ps_availqty) as "value" from     partsupp_12,     supplier_12,     nation_12 where         ps_suppkey = s_suppkey   and s_nationkey = n_nationkey   and n_name = 'SAUDI ARABIA' group by     ps_partkey having         sum(ps_supplycost * ps_availqty) > (         select                 sum(ps_supplycost * ps_availqty) * (0.0001 / 82)         from             partsupp_12,             supplier_12,             nation_12         where                 ps_suppkey = s_suppkey           and s_nationkey = n_nationkey           and n_name = 'SAUDI ARABIA'     ) order by     "value" desc;
+[3] Completed query stats: 11, 5000, 5002, 2945647
+[4] Running: select     sum(l_extendedprice * l_discount) as revenue from     lineitem_12 where         l_shipdate >= '1997-01-01'::date   and l_shipdate < dateadd(year, 1, '1997-01-01'::date)   and l_discount between (4::number(12,2) / 100) - 0.01 and (4::number(12,2) / 100) + 0.01   and l_quantity < 24;
+[4] Completed query stats: 6, 11142, 11149, 2960878
+[5] Running: select     supp_nation,     cust_nation,     l_year,     sum(volume) as revenue from     (         select             n1.n_name as supp_nation,             n2.n_name as cust_nation,             extract(year from l_shipdate) as l_year,             l_extendedprice * (1 - l_discount) as volume         from             supplier_12,             lineitem_12,             orders_12,             customer_12,             nation_12 n1,             nation_12 n2         where                 s_suppkey = l_suppkey           and o_orderkey = l_orderkey           and c_custkey = o_custkey           and s_nationkey = n1.n_nationkey           and c_nationkey = n2.n_nationkey           and (                 (n1.n_name = 'EGYPT' and n2.n_name = 'IRAN')                 or (n1.n_name = 'IRAN' and n2.n_name = 'EGYPT')             )           and l_shipdate between date '1995-01-01' and date '1996-12-31'     ) as shipping group by     supp_nation,     cust_nation,     l_year order by     supp_nation,     cust_nation,     l_year;
+[5] Completed query stats: 7, 15341, 15343, 3008561
+[6] Running: with revenue as (     select         l_suppkey as supplier_no,         sum(l_extendedprice * (1 - l_discount)) as total_revenue     from         lineitem_12     where             l_shipdate >= '1996-03-01'::date       and l_shipdate < add_months('1996-03-01'::date, 3)     group by         l_suppkey) select     s_suppkey,     s_name,     s_address,     s_phone,     total_revenue from     supplier_12,     revenue where         s_suppkey = supplier_no   and total_revenue = (     select         max(total_revenue)     from         revenue ) order by     s_suppkey;
+[6] Completed query stats: 15, 4840, 4842, 3044897
+[7] Running: select     s_name,     count(*) as numwait from     supplier_12,     lineitem_12 l1,     orders_12,     nation_12 where         s_suppkey = l1.l_suppkey   and o_orderkey = l1.l_orderkey   and o_orderstatus = 'F'   and l1.l_receiptdate > l1.l_commitdate   and exists (         select             *         from             lineitem_12 l2         where                 l2.l_orderkey = l1.l_orderkey           and l2.l_suppkey <> l1.l_suppkey     )   and not exists (         select             *         from             lineitem_12 l3         where                 l3.l_orderkey = l1.l_orderkey           and l3.l_suppkey <> l1.l_suppkey           and l3.l_receiptdate > l3.l_commitdate     )   and s_nationkey = n_nationkey   and n_name = 'ARGENTINA' group by     s_name order by     numwait desc,     s_name limit 100;
+[7] Completed query stats: 21, 10423, 10424, 3082510
+[8] Running: select     p_brand,     p_type,     p_size,     count(distinct ps_suppkey) as supplier_cnt from     partsupp_12,     part_12 where         p_partkey = ps_partkey   and p_brand <> 'Brand#41'   and p_type not like 'PROMO ANODIZED' || '%'   and p_size in (37, 24, 26, 28, 30, 41, 8, 19)   and ps_suppkey not in (     select         s_suppkey     from         supplier_12     where             s_comment like '%Customer%Complaints%' ) group by     p_brand,     p_type,     p_size order by     supplier_cnt desc,     p_brand,     p_type,     p_size;
+[8] Completed query stats: 16, 4938, 4940, 3108153
+[9] Running: select     l_shipmode,     sum(case             when o_orderpriority = '1-URGENT'                 or o_orderpriority = '2-HIGH'                 then 1             else 0         end) as high_line_count,     sum(case             when o_orderpriority <> '1-URGENT'                 and o_orderpriority <> '2-HIGH'                 then 1             else 0         end) as low_line_count from     orders_12,     lineitem_12 where         o_orderkey = l_orderkey   and l_shipmode in ('TRUCK', 'SHIP')   and l_commitdate < l_receiptdate   and l_shipdate < l_commitdate   and l_receiptdate >= '1996-01-01'::date   and l_receiptdate < dateadd(year, 1, '1996-01-01'::date) group by     l_shipmode order by     l_shipmode; 
+[9] Completed query stats: 12, 5685, 5687, 3170312
+[10] Running: select     ps_partkey,     sum(ps_supplycost * ps_availqty) as "value" from     partsupp_12,     supplier_12,     nation_12 where         ps_suppkey = s_suppkey   and s_nationkey = n_nationkey   and n_name = 'CANADA' group by     ps_partkey having         sum(ps_supplycost * ps_availqty) > (         select                 sum(ps_supplycost * ps_availqty) * (0.0001 / 82)         from             partsupp_12,             supplier_12,             nation_12         where                 ps_suppkey = s_suppkey           and s_nationkey = n_nationkey           and n_name = 'CANADA'     ) order by     "value" desc;
+[10] Completed query stats: 11, 2178, 2179, 3215176
+[11] Running: select     c_name,     c_custkey,     o_orderkey,     o_orderdate,     o_totalprice,     sum(l_quantity) from     customer_12,     orders_12,     lineitem_12 where         o_orderkey in (         select             l_orderkey         from             lineitem_12         group by             l_orderkey having                 sum(l_quantity) > 315     )   and c_custkey = o_custkey   and o_orderkey = l_orderkey group by     c_name,     c_custkey,     o_orderkey,     o_orderdate,     o_totalprice order by     o_totalprice desc,     o_orderdate limit 100;
+[12] Running: with revenue as (     select         l_suppkey as supplier_no,         sum(l_extendedprice * (1 - l_discount)) as total_revenue     from         lineitem_12     where             l_shipdate >= '1996-09-01'::date       and l_shipdate < add_months('1996-09-01'::date, 3)     group by         l_suppkey) select     s_suppkey,     s_name,     s_address,     s_phone,     total_revenue from     supplier_12,     revenue where         s_suppkey = supplier_no   and total_revenue = (     select         max(total_revenue)     from         revenue ) order by     s_suppkey;
+[12] Completed query stats: 15, 7986, 7988, 3278380
+[11] Completed query stats: 18, 17292, 17294, 3269083
+[13] Running: select             100.00 * sum(case                              when p_type like 'PROMO%'                                  then l_extendedprice * (1 - l_discount)                              else 0             end) / sum(l_extendedprice * (1 - l_discount)) as promo_revenue from     lineitem_12,     part_12 where         l_partkey = p_partkey   and l_shipdate >= '1996-06-01'::date   and l_shipdate < add_months('1996-06-01'::date, 1);
+[13] Completed query stats: 14, 5478, 5479, 3323163
+[14] Running: select     p_brand,     p_type,     p_size,     count(distinct ps_suppkey) as supplier_cnt from     partsupp_12,     part_12 where         p_partkey = ps_partkey   and p_brand <> 'Brand#35'   and p_type not like 'ECONOMY BRUSHED' || '%'   and p_size in (30, 7, 23, 35, 44, 19, 36, 34)   and ps_suppkey not in (     select         s_suppkey     from         supplier_12     where             s_comment like '%Customer%Complaints%' ) group by     p_brand,     p_type,     p_size order by     supplier_cnt desc,     p_brand,     p_type,     p_size;
+[14] Completed query stats: 16, 3422, 3423, 3375166
+-- START CSV --
+query_stream_id,query_id, start,relative_start,query_duration,query_duration_with_queue,start_delay
+12,8,1649953520546,2820716,24593,25116,0
+12,15,1649953567747,2867917,13969,13970,1
+12,22,1649953580381,2880551,2705,3064,1
+12,11,1649953645477,2945647,5000,5002,1
+12,6,1649953660708,2960878,11142,11149,2
+12,7,1649953708391,3008561,15341,15343,1
+12,15,1649953744727,3044897,4840,4842,1
+12,21,1649953782340,3082510,10423,10424,1
+12,16,1649953807983,3108153,4938,4940,1
+12,12,1649953870142,3170312,5685,5687,1
+12,11,1649953915006,3215176,2178,2179,0
+12,18,1649953968913,3269083,17292,17294,0
+12,15,1649953978210,3278380,7986,7988,1
+12,14,1649954022993,3323163,5478,5479,1
+12,16,1649954074996,3375166,3422,3423,1
+-- STOP CSV --
+total_time: 3378604
+total_lost: 13
+query_duration: 134992
+query_duration_with_queue: 135900
+total_cost: 0
+total_scanned: 0
+
+Normal program exit: done :)

@@ -1,0 +1,65 @@
+query_stream_id: 12
+{
+  database_id: 12,
+  scale_factor: 23,
+  database_byte_count: 23000000000,
+  size_bucket: 10,
+  pattern_id: 3,
+  cpu_time: 12557495,
+  cpu_time_h: '0.00348819h',
+  query_count: 15
+}
+[0] Running: select    p_brand,    p_type,    p_size,    count(distinct ps_suppkey) as supplier_cntfrom    partsupp_12,    part_12where        p_partkey = ps_partkey  and p_brand <> 'Brand#24'  and p_type not like 'LARGE BRUSHED' || '%'  and p_size in (24, 2, 1, 16, 5, 26, 27, 45)  and ps_suppkey not in (    select        s_suppkey    from        supplier_12    where            s_comment like '%Customer%Complaints%')group by    p_brand,    p_type,    p_sizeorder by    supplier_cnt desc,    p_brand,    p_type,    p_size;
+[0] Completed query 16 in 10729ms
+[1] Running: select    c_count,    count(*) as custdistfrom    (        select            c_custkey,            count(o_orderkey) c_count        from            customer_12 left outer join orders_12 on                        c_custkey = o_custkey                    and o_comment not like '%' || 'special' || '%' || 'accounts' || '%'        group by            c_custkey    ) as c_ordersgroup by    c_countorder by    custdist desc,    c_count desc;
+[1] Completed query 13 in 12985ms
+[2] Running: select    s_acctbal,    s_name,    n_name,    p_partkey,    p_mfgr,    s_address,    s_phone,    s_commentfrom    part_12,    supplier_12,    partsupp_12,    nation_12,    region_12where        p_partkey = ps_partkey  and s_suppkey = ps_suppkey  and p_size = 21  and p_type like '%' || 'TIN'  and s_nationkey = n_nationkey  and n_regionkey = r_regionkey  and r_name = 'AMERICA'  and ps_supplycost = (    select        min(ps_supplycost)    from        partsupp_12,        supplier_12,        nation_12,        region_12    where            p_partkey = ps_partkey      and s_suppkey = ps_suppkey      and s_nationkey = n_nationkey      and n_regionkey = r_regionkey      and r_name = 'AMERICA')order by    s_acctbal desc,    n_name,    s_name,    p_partkeylimit 100;
+[3] Running: select    c_count,    count(*) as custdistfrom    (        select            c_custkey,            count(o_orderkey) c_count        from            customer_12 left outer join orders_12 on                        c_custkey = o_custkey                    and o_comment not like '%' || 'special' || '%' || 'deposits' || '%'        group by            c_custkey    ) as c_ordersgroup by    c_countorder by    custdist desc,    c_count desc;
+[2] Completed query 2 in 16264ms
+[3] Completed query 13 in 14859ms
+[4] Running: select    o_year,    sum(case            when nation = 'BRAZIL' then volume            else 0        end) / sum(volume) as mkt_sharefrom    (        select            extract(year from o_orderdate) as o_year,            l_extendedprice * (1 - l_discount) as volume,            n2.n_name as nation        from            part_12,            supplier_12,            lineitem_12,            orders_12,            customer_12,            nation_12 n1,            nation_12 n2,            region_12        where                p_partkey = l_partkey          and s_suppkey = l_suppkey          and l_orderkey = o_orderkey          and o_custkey = c_custkey          and c_nationkey = n1.n_nationkey          and n1.n_regionkey = r_regionkey          and r_name = 'AMERICA'          and s_nationkey = n2.n_nationkey          and o_orderdate between date '1995-01-01' and date '1996-12-31'          and p_type = 'LARGE POLISHED BRASS'    ) as all_nationsgroup by    o_yearorder by    o_year;
+[4] Completed query 8 in 6883ms
+[5] Running: select    nation,    o_year,    sum(amount) as sum_profitfrom    (        select            n_name as nation,            extract(year from o_orderdate) as o_year,            l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount        from            part_12,            supplier_12,            lineitem_12,            partsupp_12,            orders_12,            nation_12        where                s_suppkey = l_suppkey          and ps_suppkey = l_suppkey          and ps_partkey = l_partkey          and p_partkey = l_partkey          and o_orderkey = l_orderkey          and s_nationkey = n_nationkey          and p_name like '%' || 'orchid' || '%'    ) as profitgroup by    nation,    o_yearorder by    nation,    o_year desc;
+[5] Completed query 9 in 12899ms
+[6] Running: select    ps_partkey,    sum(ps_supplycost * ps_availqty) as "value"from    partsupp_12,    supplier_12,    nation_12where        ps_suppkey = s_suppkey  and s_nationkey = n_nationkey  and n_name = 'UNITED KINGDOM'group by    ps_partkey having        sum(ps_supplycost * ps_availqty) > (        select                sum(ps_supplycost * ps_availqty) * (0.0001 / 23)        from            partsupp_12,            supplier_12,            nation_12        where                ps_suppkey = s_suppkey          and s_nationkey = n_nationkey          and n_name = 'UNITED KINGDOM'    )order by    "value" desc;
+[6] Completed query 11 in 32714ms
+[7] Running: select    c_count,    count(*) as custdistfrom    (        select            c_custkey,            count(o_orderkey) c_count        from            customer_12 left outer join orders_12 on                        c_custkey = o_custkey                    and o_comment not like '%' || 'special' || '%' || 'packages' || '%'        group by            c_custkey    ) as c_ordersgroup by    c_countorder by    custdist desc,    c_count desc;
+[7] Completed query 13 in 1912ms
+[8] Running: begin;,insert into orders_12 (    select o_orderkey + 8,           o_custkey,           o_orderstatus,           (select sum(L_QUANTITY * P_RETAILPRICE * (1+L_TAX) * (1-L_DISCOUNT)) from lineitem_12, part_12 where l_orderkey = o_orderkey and P_PARTKEY = L_PARTKEY), o_orderdate, o_orderpriority, o_clerk, o_shippriority, o_comment    from orders_12    where 137862016 <= o_orderkey and o_orderkey < 138000032);,delete from orders_12 where 137862016 <= o_orderkey and o_orderkey < 138000032 and mod(o_orderkey, 32) between 0 and 7;,commit;
+[8] Completed query 23 in 3009ms
+[9] Running: select    cntrycode,    count(*) as numcust,    sum(c_acctbal) as totacctbalfrom    (        select            substring(c_phone, 1, 2) as cntrycode,            c_acctbal        from            customer_12        where                substring(c_phone, 1, 2) in                (34, 27, 10, 20, 13, 14, 28)          and c_acctbal > (            select                avg(c_acctbal)            from                customer_12            where                    c_acctbal > 0.00              and substring(c_phone, 1, 2) in                  (34, 27, 10, 20, 13, 14, 28)        )          and not exists (                select                    *                from                    orders_12                where                        o_custkey = c_custkey            )    ) as custsalegroup by    cntrycodeorder by    cntrycode;
+[9] Completed query 22 in 874ms
+[10] Running: select    s_name,    count(*) as numwaitfrom    supplier_12,    lineitem_12 l1,    orders_12,    nation_12where        s_suppkey = l1.l_suppkey  and o_orderkey = l1.l_orderkey  and o_orderstatus = 'F'  and l1.l_receiptdate > l1.l_commitdate  and exists (        select            *        from            lineitem_12 l2        where                l2.l_orderkey = l1.l_orderkey          and l2.l_suppkey <> l1.l_suppkey    )  and not exists (        select            *        from            lineitem_12 l3        where                l3.l_orderkey = l1.l_orderkey          and l3.l_suppkey <> l1.l_suppkey          and l3.l_receiptdate > l3.l_commitdate    )  and s_nationkey = n_nationkey  and n_name = 'BRAZIL'group by    s_nameorder by    numwait desc,    s_namelimit 100;
+[10] Completed query 21 in 3162ms
+[11] Running: select    l_orderkey,    sum(l_extendedprice * (1 - l_discount)) as revenue,    o_orderdate,    o_shippriorityfrom    customer_12,    orders_12,    lineitem_12where        c_mktsegment = 'HOUSEHOLD'  and c_custkey = o_custkey  and l_orderkey = o_orderkey  and o_orderdate < '1995-03-14'::date  and l_shipdate > '1995-03-14'::dategroup by    l_orderkey,    o_orderdate,    o_shippriorityorder by    revenue desc,    o_orderdatelimit 10;
+[11] Completed query 3 in 1355ms
+[12] Running: select        sum(l_extendedprice) / 7.0 as avg_yearlyfrom    lineitem_12,    part_12where        p_partkey = l_partkey  and p_brand = 'Brand#51'  and p_container = 'SM CASE'  and l_quantity < (    select            0.2 * avg(l_quantity)    from        lineitem_12    where            l_partkey = p_partkey);
+[12] Completed query 17 in 3295ms
+[13] Running: select    supp_nation,    cust_nation,    l_year,    sum(volume) as revenuefrom    (        select            n1.n_name as supp_nation,            n2.n_name as cust_nation,            extract(year from l_shipdate) as l_year,            l_extendedprice * (1 - l_discount) as volume        from            supplier_12,            lineitem_12,            orders_12,            customer_12,            nation_12 n1,            nation_12 n2        where                s_suppkey = l_suppkey          and o_orderkey = l_orderkey          and c_custkey = o_custkey          and s_nationkey = n1.n_nationkey          and c_nationkey = n2.n_nationkey          and (                (n1.n_name = 'VIETNAM' and n2.n_name = 'IRAQ')                or (n1.n_name = 'IRAQ' and n2.n_name = 'VIETNAM')            )          and l_shipdate between date '1995-01-01' and date '1996-12-31'    ) as shippinggroup by    supp_nation,    cust_nation,    l_yearorder by    supp_nation,    cust_nation,    l_year;
+[13] Completed query 7 in 1605ms
+[14] Running: begin;,insert into orders_12 (    select o_orderkey + 8,           o_custkey,           o_orderstatus,           (select sum(L_QUANTITY * P_RETAILPRICE * (1+L_TAX) * (1-L_DISCOUNT)) from lineitem_12, part_12 where l_orderkey = o_orderkey and P_PARTKEY = L_PARTKEY), o_orderdate, o_orderpriority, o_clerk, o_shippriority, o_comment    from orders_12    where 137724000 <= o_orderkey and o_orderkey < 137862016);,delete from orders_12 where 137724000 <= o_orderkey and o_orderkey < 137862016 and mod(o_orderkey, 32) between 0 and 7;,commit;
+[14] Completed query 23 in 3201ms
+-- START CSV --
+query_stream_id,query_id, start,relative_start,query_duration,query_duration_with_queue,start_delay
+12,16,1649339009483,2825116,10729,11258,1
+12,13,1649339034174,2849807,12985,12989,1
+12,2,1649339099258,2914891,16264,16267,1
+12,13,1649339103291,2918924,14859,14984,0
+12,8,1649339156604,2972237,6883,6884,1
+12,9,1649339198448,3014081,12899,12901,1
+12,11,1649339218643,3034276,32714,32715,0
+12,13,1649339261189,3076822,1912,1914,1
+12,23,1649339286507,3102140,3009,3012,1
+12,22,1649339381977,3197610,874,876,1
+12,21,1649339398794,3214427,3162,3163,1
+12,3,1649339441573,3257206,1355,1356,0
+12,17,1649339462471,3278104,3295,3296,0
+12,7,1649339499011,3314644,1605,1606,0
+12,23,1649339535458,3351091,3201,3203,0
+-- STOP CSV --
+total_time: 3354302
+total_lost: 9
+query_duration: 125746
+query_duration_with_queue: 126424
+
+Normal program exit: done :)
