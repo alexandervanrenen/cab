@@ -1,15 +1,21 @@
 import SnowflakePool from './snowflake_pool.js';
+import AthenaPool from "./athena_pool.js";
+import BigQueryPool from "./bigquery_pool.js";
 import Common from './common.js';
 import chalk from 'chalk';
 import fs from "fs";
 
 const gb_per_chunk = 1;
 const snowflake_pool_concurrency = 5;
+const athena_pool_concurrency = 5;
+const big_query_pool_concurrency = 5;
 
 class LoadSetupManager {
    constructor() {
       this.query_streams = [];
       this.snowflake = new SnowflakePool(snowflake_pool_concurrency, false);
+      // this.athena = new AthenaPool(athena_pool_concurrency, false);
+      this.big_query_pool = new BigQueryPool(big_query_pool_concurrency, false);
    }
 
    // Read query_streams from disk and gather meta info for all databases
@@ -34,6 +40,36 @@ class LoadSetupManager {
          this.snowflake.RunPrintSync("create or replace TABLE PARTSUPP_" + query_stream.database_id + " ( PS_PARTKEY NUMBER(38,0), PS_SUPPKEY NUMBER(38,0), PS_AVAILQTY NUMBER(38,0), PS_SUPPLYCOST NUMBER(12,2), PS_COMMENT VARCHAR(199) );");
          this.snowflake.RunPrintSync("create or replace TABLE SUPPLIER_" + query_stream.database_id + " ( S_SUPPKEY NUMBER(38,0), S_NAME VARCHAR(25), S_ADDRESS VARCHAR(40), S_NATIONKEY NUMBER(38,0), S_PHONE VARCHAR(15), S_ACCTBAL NUMBER(12,2), S_COMMENT VARCHAR(101) );");
          await this.snowflake.Wait();
+      }
+   }
+
+   // Create tables for all scale_factors
+   async CreateDataTablesAthena() {
+      console.log(chalk.cyan("\nCreating athena tables ..."));
+      for (const file of ["sql_athena/drop_table_ddl.sql", "sql_athena/create_table_ddl.sql"]) {
+         const table_ddl_template = fs.readFileSync(file).toString();
+         for (const query_stream of this.query_streams) {
+            const table_ddls = table_ddl_template.replaceAll(":database_id:", query_stream.database_id).replaceAll("\n", "").split(":split:");
+            for (const table_ddl of table_ddls) {
+               console.log(table_ddl.substr(0, table_ddl.indexOf('(') === -1 ? table_ddl.indexOf(';') : table_ddl.indexOf('(')) + ";");
+               this.athena.RunSync(table_ddl);
+            }
+            await this.athena.Wait();
+         }
+      }
+   }
+
+   // Create tables for all scale_factors
+   async CreateDataTablesBigQuery() {
+      console.log(chalk.cyan("\nCreating bigquery tables ..."));
+      const table_ddl_template = fs.readFileSync("sql_big_query/create_table_ddl.sql").toString();
+      for (const query_stream of this.query_streams) {
+         const table_ddls = table_ddl_template.replaceAll(":database_id:", query_stream.database_id).replaceAll(":dataset_name:", this.big_query_pool.connection_options.dataset_name).replaceAll("\n", "").split(":split:");
+         for (const table_ddl of table_ddls) {
+            console.log(table_ddl.substr(0, table_ddl.indexOf('(') === -1 ? table_ddl.indexOf(';') : table_ddl.indexOf('(')) + ";");
+            await this.big_query_pool.RunSync(table_ddl);
+         }
+         await this.big_query_pool.Wait();
       }
    }
 
@@ -71,7 +107,9 @@ async function main() {
 
    const setup_manager = new LoadSetupManager();
    setup_manager.LoadDatabases("query_streams");
-   await setup_manager.CreateDataTablesSnowflake();
+   // await setup_manager.CreateDataTablesSnowflake();
+   // await setup_manager.CreateDataTablesAthena();
+   await setup_manager.CreateDataTablesBigQuery();
    await setup_manager.CreateJobTables();
    await setup_manager.CreateLoadJobs();
 

@@ -19,7 +19,7 @@ cd benchmark
 npm install
 
 # Install dbgen
-git clone https://github.com/electrum/tpch-dbgen.git
+git clone https://github.com/alexandervanrenen/tpch-dbgen
 cd tpch-dbgen
 make
 cd ..

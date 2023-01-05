@@ -1,4 +1,5 @@
 import SnowflakePool from './snowflake_pool.js';
+import AthenaPool from './athena_pool.js';
 import fs from "fs";
 import chalk from 'chalk';
 import table from 'table';
@@ -10,7 +11,7 @@ class QueryStreamAnalyzer {
       let i = 0;
       while (true) {
          try {
-            const data = fs.readFileSync("../results/snowflake_shared_1h_32s_4tb/executor_" + i + ".log").toString();
+            const data = fs.readFileSync("../results/big_query_1h_1tb/executor_" + i + ".log").toString();
             this.query_streams.push(data);
             i++;
          } catch (e) { break; }
@@ -27,7 +28,7 @@ class QueryStreamAnalyzer {
          if (idx === 0) {
             console.log("type,runtime,warehouse_size," + header[0]);
          }
-         csv_section = csv_section.map(line => "snowflake-i,3600,32," + line);
+         csv_section = csv_section.map(line => "big-query,3600,0," + line);
          console.log(csv_section.join("\n"));
       });
    }

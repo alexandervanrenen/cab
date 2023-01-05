@@ -1,4 +1,6 @@
 import SnowflakePool from './snowflake_pool.js';
+import AthenaPool from './athena_pool.js';
+import BigQueryPool from './bigquery_pool.js';
 import fs from "fs";
 import chalk from 'chalk';
 
@@ -55,13 +57,18 @@ class QueryStreamExecuter {
          while (this.remaining_retries > 0) {
             try {
                if (query.query_id !== 23) {
+                  console.log("[" + idx + "] Running: " + AthenaPool._FillBinds(query_template, query.arguments).replaceAll("\n", " "));
                   res = (await this.database_connection.RunSync(query_template, query.arguments));
                } else {
+                  console.log("[" + idx + "] Running: " + query_template.map(qt => AthenaPool._FillBinds(qt, query.arguments).replaceAll("\n", " ")));
                   res = (await this.database_connection.RunArraySync(query_template, query.arguments));
                }
             } catch (e) {
                console.log("[" + idx + "] Failed: " + e);
                this.remaining_retries--;
+               if (this.remaining_retries === 0) {
+                  throw "Retries exceeded";
+               }
                continue;
             }
             break;
@@ -115,7 +122,7 @@ async function main() {
    const query_stream_id = process.argv[2];
    console.log("query_stream_id: " + query_stream_id);
 
-   const executor = new QueryStreamExecuter(SnowflakePool.GetConfig());
+   const executor = new QueryStreamExecuter(BigQueryPool.GetConfig());
    await executor.LoadQueryStream(query_stream_id);
    await executor.LoadQueryTemplates();
    await executor.RunQueryStream();

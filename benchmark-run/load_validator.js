@@ -1,4 +1,6 @@
 import SnowflakePool from './snowflake_pool.js';
+import AthenaPool from './athena_pool.js';
+import BigQueryPool from './bigquery_pool.js';
 import Common from './common.js';
 import chalk from 'chalk';
 
@@ -75,7 +77,7 @@ class LoadValidator {
 }
 
 async function main() {
-   const worker = new LoadValidator(SnowflakePool.GetConfig());
+   const worker = new LoadValidator(BigQueryPool.GetConfig());
    await worker.ValidateTableCardinalities("query_streams");
    await worker.ValidateTableKeys("query_streams");
 

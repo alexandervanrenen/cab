@@ -1,11 +1,13 @@
 import SnowflakePool from './snowflake_pool.js';
+import AthenaPool from './athena_pool.js';
+import BigQueryPool from "./bigquery_pool.js";
 import S3Wrapper from './s3_wrapper.js';
 import Common from './common.js';
 import fs from "fs";
 import exec from 'child_process';
 import chalk from 'chalk';
 
-const snowflake_pool_concurrency = 1;
+const pool_concurrency = 1;
 const dbgen_file = "dbgen";
 const dbgen_folder = "tpch-dbgen";
 const dbgen_path = dbgen_folder + "/" + dbgen_file;
@@ -14,18 +16,24 @@ const csv_directory = "gen_" + process.pid;
 class LoadWorker {
    constructor() {
       this.databases = [];
-      this.snowflake = new SnowflakePool(snowflake_pool_concurrency, false);
-      this.s3_wrapper = new S3Wrapper();
+      this.snowflake = new SnowflakePool(pool_concurrency, false);
+      // this.athena = new AthenaPool(pool_concurrency, false);
+      this.big_query_pool = new BigQueryPool(pool_concurrency, false);
+      // this.s3_wrapper = new S3Wrapper();
       this.stats = {
          compress_total: 0,
          dbgen_total: 0,
          upload_total: 0,
+         copy_athena_total: 0,
          copy_snowflake_total: 0,
+         copy_bigquery_total: 0,
          pipelined_upload_total: 0,
          compress: [],
          dbgen: [],
          upload: [],
+         copy_athena: [],
          copy_snowflake: [],
+         copy_bigquery: [],
          pipelined_upload: [],
       };
    }
@@ -56,7 +64,7 @@ class LoadWorker {
                const error_message = "Can not execute '" + dbgen_path + "'.\n" +
                   "Make sure the tpc-h dbgen tool is installed in '" + dbgen_folder + "'.\n" +
                   "If it is located at a different location, you can adjust the `dbgen_folder` in this script.\n" +
-                  "Otherwise download and compile it: https://github.com/electrum/tpch-dbgen";
+                  "Otherwise download and compile it: https://github.com/alexandervanrenen/tpch-dbgen";
                console.log(chalk.red(error_message));
                throw new Error(error_message);
             }
@@ -199,6 +207,57 @@ class LoadWorker {
       this.stats.copy_snowflake.push({time: Date.now() - start, table_name: job.TABLE_NAME});
    }
 
+   async CopyIntoTableAthena(job) {
+      console.log(chalk.cyan("\nCopy into athena table ..."));
+      const start = Date.now();
+      const external_table_dlls = {};
+      external_table_dlls.region = "CREATE EXTERNAL TABLE tmp_region_:database_id:_:step: (r_regionkey bigint, r_name varchar(25), r_comment varchar(152)) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' LOCATION :s3_location:;"
+      external_table_dlls.nation = "CREATE EXTERNAL TABLE tmp_nation_:database_id:_:step: (n_nationkey bigint, n_name varchar(25), n_regionkey bigint, n_comment varchar(152)) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' LOCATION :s3_location:;"
+      external_table_dlls.customer = "CREATE EXTERNAL TABLE tmp_customer_:database_id:_:step: (c_custkey bigint, c_name varchar(25), c_address varchar(40), c_nationkey bigint, c_phone varchar(15), c_acctbal decimal(12,2), c_mktsegment varchar(10), c_comment varchar(117)) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' LOCATION :s3_location:;"
+      external_table_dlls.lineitem = "CREATE EXTERNAL TABLE tmp_lineitem_:database_id:_:step: (l_orderkey bigint, l_partkey bigint, l_suppkey bigint, l_linenumber bigint, l_quantity decimal(12,2), l_extendedprice decimal(12,2), l_discount decimal(12,2), l_tax decimal(12,2), l_returnflag varchar(1), l_linestatus varchar(1), l_shipdate date, l_commitdate date, l_receiptdate date, l_shipinstruct varchar(25), l_shipmode varchar(10), l_comment varchar(44)) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' LOCATION :s3_location:;"
+      external_table_dlls.orders = "CREATE EXTERNAL TABLE tmp_orders_:database_id:_:step: (o_orderkey bigint, o_custkey bigint, o_orderstatus varchar(1), o_totalprice decimal(12,2), o_orderdate date, o_orderpriority varchar(15), o_clerk varchar(15), o_shippriority bigint, o_comment varchar(79)) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' LOCATION :s3_location:;"
+      external_table_dlls.part = "CREATE EXTERNAL TABLE tmp_part_:database_id:_:step: (p_partkey bigint, p_name varchar(55), p_mfgr varchar(25), p_brand varchar(10), p_type varchar(25), p_size bigint, p_container varchar(10), p_retailprice decimal(12,2), p_comment varchar(23)) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' LOCATION :s3_location:;"
+      external_table_dlls.partsupp = "CREATE EXTERNAL TABLE tmp_partsupp_:database_id:_:step: (ps_partkey bigint, ps_suppkey bigint, ps_availqty bigint, ps_supplycost decimal(12,2), ps_comment varchar(199)) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' LOCATION :s3_location:;"
+      external_table_dlls.supplier = "CREATE EXTERNAL TABLE tmp_supplier_:database_id:_:step: (s_suppkey bigint, s_name varchar(25), s_address varchar(40), s_nationkey bigint, s_phone varchar(15), s_acctbal decimal(12,2), s_comment varchar(101)) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' LOCATION :s3_location:;"
+
+      // Create external table to copy from
+      const s3_location = this.s3_wrapper._GetS3AccessPathFolder(job.DATABASE_ID, job.TABLE_NAME, job.STEP);
+      const external_table_dll = external_table_dlls[job.TABLE_NAME].replaceAll(":database_id:", job.DATABASE_ID).replaceAll(":step:", job.STEP).replaceAll(":s3_location:", s3_location);
+      console.log("athena:> " + external_table_dll);
+      await this.athena.RunSync(external_table_dll);
+
+      // Copy over
+      const copy_dml = "insert into " + job.TABLE_NAME + "_" + job.DATABASE_ID + " (select * from tmp_" + job.TABLE_NAME + "_" + job.DATABASE_ID + "_" + job.STEP + ");"
+      console.log("athena:> " + copy_dml);
+      await this.athena.RunSync(copy_dml);
+
+      // Delete external table
+      const drop_dll = "drop table tmp_" + job.TABLE_NAME + "_" + job.DATABASE_ID + "_" + job.STEP + ";";
+      console.log("athena:> " + drop_dll);
+      await this.athena.RunSync(drop_dll);
+
+      this.stats.copy_athena_total += (Date.now() - start);
+      this.stats.copy_athena.push(Date.now() - start);
+   }
+
+   async CopyIntoTableBigQuery(job) {
+      // Imports a local file into a table.
+      const table_db_id = job.TABLE_NAME + "_" + job.DATABASE_ID;
+      const generated_file = this._GetGeneratedFileName(job);
+
+      // Load data from a local file into the table
+      const [bq_job] = await this.big_query_pool.pool
+         .dataset(this.big_query_pool.connection_options.dataset_name)
+         .table(table_db_id)
+         .load(generated_file, {fieldDelimiter: "|", ignoreUnknownValues: true});
+
+      // Check the job's status for errors
+      const errors = bq_job.status.errors;
+      if (errors && errors.length > 0) {
+         throw errors;
+      }
+   }
+
    async MarkJobAsDone(job) {
       console.log(chalk.cyan("\nMarking job as complete ..."));
       const res = await this.snowflake.RunSync("update jobs set status = 'complete' where job_id = ? and status = 'running'", [job.JOB_ID]);
@@ -219,9 +278,11 @@ async function main() {
    let job;
    while (job = await worker.GetNextJob()) {
       await worker.CreateCsvFile(job);
-      await worker.CompressCsvFile(job);
-      await worker.UploadCsvFileS3(job);
-      await worker.CopyIntoTableSnowflake(job);
+      // await worker.CompressCsvFile(job);
+      // await worker.UploadCsvFileS3(job);
+      // await worker.CopyIntoTableSnowflake(job);
+      // await worker.CopyIntoTableAthena(job);
+      await worker.CopyIntoTableBigQuery(job);
       await worker.MarkJobAsDone(job);
       await worker.CleanTmpFiles(job);
    }

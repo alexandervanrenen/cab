@@ -1,7 +1,9 @@
 {
   "type": "module",
   "dependencies": {
+    "@google-cloud/bigquery": "^5.12.0",
     "async-mutex": "^0.3.2",
+    "athena-express": "^7.1.5",
     "aws-sdk": "^2.1097.0",
     "chalk": "^5.0.1",
     "n-readlines": "^1.0.1",
