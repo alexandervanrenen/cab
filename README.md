@@ -1,5 +1,7 @@
 # Cloud Analytics Benchmark (CAB)
 
+This repository contains the implementatio of the CAB benchmark, as described in [this paper](https://www.vldb.org/pvldb/vol16/p1413-renen.pdf).
+
 A short description of the individual folders and how to use them.
 
 #### ``cab/benchmark-gen``
